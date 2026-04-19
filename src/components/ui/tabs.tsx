@@ -12,7 +12,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
+      "inline-flex h-10 items-center justify-center gap-1 rounded-sm border border-border bg-card/60 p-1 backdrop-blur",
       className,
     )}
     {...props}
@@ -27,7 +27,14 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
+      "relative inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5",
+      "font-mono text-[11px] uppercase tracking-[0.16em] font-medium text-muted-foreground",
+      "transition-[color,background-color,box-shadow] duration-150",
+      "hover:text-foreground hover:animate-[glitch-shift_320ms_steps(2,end)_1]",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+      "disabled:pointer-events-none disabled:opacity-50",
+      "data-[state=active]:bg-primary/10 data-[state=active]:text-primary",
+      "data-[state=active]:shadow-[inset_0_-2px_0_0_var(--primary),0_0_18px_color-mix(in_oklab,var(--primary)_30%,transparent)]",
       className,
     )}
     {...props}
@@ -42,7 +49,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "mt-3 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className,
     )}
     {...props}
