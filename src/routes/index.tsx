@@ -69,9 +69,9 @@ function Index() {
 
         {/* KPI grid */}
         <section className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <KpiCard label="sales today" value="$0.00" tone="primary" icon={<TrendingUp className="h-4 w-4" />} />
-          <KpiCard label="expenses today" value="$0.00" tone="accent" icon={<Box className="h-4 w-4" />} />
-          <KpiCard label="profit today" value="$0.00" tone="neon" icon={<Activity className="h-4 w-4" />} />
+          <KpiCard label="sales today" value="₹0.00" tone="primary" icon={<TrendingUp className="h-4 w-4" />} />
+          <KpiCard label="expenses today" value="₹0.00" tone="accent" icon={<Box className="h-4 w-4" />} />
+          <KpiCard label="profit today" value="₹0.00" tone="neon" icon={<Activity className="h-4 w-4" />} />
           <KpiCard label="low stock" value="0" tone="warning" icon={<AlertTriangle className="h-4 w-4" />} />
         </section>
 
