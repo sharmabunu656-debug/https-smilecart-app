@@ -27,6 +27,14 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const inrFormatter = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 2,
+});
+
+export const formatINR = (value: number) => inrFormatter.format(value);
+
 function Index() {
   return (
     <div className="min-h-screen scanlines">
@@ -69,9 +77,9 @@ function Index() {
 
         {/* KPI grid */}
         <section className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <KpiCard label="sales today" value="₹0.00" tone="primary" icon={<TrendingUp className="h-4 w-4" />} />
-          <KpiCard label="expenses today" value="₹0.00" tone="accent" icon={<Box className="h-4 w-4" />} />
-          <KpiCard label="profit today" value="₹0.00" tone="neon" icon={<Activity className="h-4 w-4" />} />
+          <KpiCard label="sales today" value={formatINR(0)} tone="primary" icon={<TrendingUp className="h-4 w-4" />} />
+          <KpiCard label="expenses today" value={formatINR(0)} tone="accent" icon={<Box className="h-4 w-4" />} />
+          <KpiCard label="profit today" value={formatINR(0)} tone="neon" icon={<Activity className="h-4 w-4" />} />
           <KpiCard label="low stock" value="0" tone="warning" icon={<AlertTriangle className="h-4 w-4" />} />
         </section>
 
