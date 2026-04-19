@@ -32,14 +32,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Sharma Store" },
+      { name: "description", content: "Shop Smarter is a grocery shop management app for tracking inventory, sales, and profits." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Sharma Store" },
+      { property: "og:description", content: "Shop Smarter is a grocery shop management app for tracking inventory, sales, and profits." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Sharma Store" },
+      { name: "twitter:description", content: "Shop Smarter is a grocery shop management app for tracking inventory, sales, and profits." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/p6Yw4hk81UPyt9Tg3J4WEb9211N2/social-images/social-1776572929817-sharma_store.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/p6Yw4hk81UPyt9Tg3J4WEb9211N2/social-images/social-1776572929817-sharma_store.webp" },
     ],
     links: [
       {
