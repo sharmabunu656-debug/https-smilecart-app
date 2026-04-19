@@ -6,8 +6,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+/** Hi-tech label: mono, uppercase, wide-tracking. */
 const labelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+  "font-mono text-[10px] uppercase tracking-[0.18em] font-medium text-muted-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
 );
 
 const Label = React.forwardRef<
