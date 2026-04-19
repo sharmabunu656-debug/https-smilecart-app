@@ -27,6 +27,14 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const inrFormatter = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 2,
+});
+
+export const formatINR = (value: number) => inrFormatter.format(value);
+
 function Index() {
   return (
     <div className="min-h-screen scanlines">
