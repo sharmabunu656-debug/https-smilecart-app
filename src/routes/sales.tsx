@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/table";
 import { useShop, type PaymentMethod } from "@/lib/shop-store";
 import { formatINR, formatNumberIN } from "@/lib/currency";
+import { BarcodeScanner } from "@/components/BarcodeScanner";
+import { ScanLine } from "lucide-react";
+import { toast as sonnerToast } from "sonner";
 
 export const Route = createFileRoute("/sales")({
   head: () => ({
@@ -29,8 +32,20 @@ export const Route = createFileRoute("/sales")({
 function SalesPage() {
   const { products, sales, findBySku, recordSale } = useShop();
   const [sku, setSku] = React.useState("");
+  const [scannerOpen, setScannerOpen] = React.useState(false);
 
   const matched = sku ? findBySku(sku) : undefined;
+
+  const handleScan = (text: string) => {
+    const cleaned = text.trim();
+    setSku(cleaned);
+    const hit = findBySku(cleaned);
+    if (hit) {
+      sonnerToast.success(`scanned · ${hit.name}`);
+    } else {
+      sonnerToast.warning(`scanned ${cleaned} · sku not in catalog`);
+    }
+  };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,13 +86,25 @@ function SalesPage() {
           <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-1.5">
               <Label htmlFor="sku">product sku</Label>
-              <Input
-                id="sku"
-                value={sku}
-                onChange={(e) => setSku(e.target.value)}
-                placeholder="MLK-001"
-                list="sku-list"
-              />
+              <div className="flex gap-2">
+                <Input
+                  id="sku"
+                  value={sku}
+                  onChange={(e) => setSku(e.target.value)}
+                  placeholder="MLK-001"
+                  list="sku-list"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setScannerOpen(true)}
+                  title="scan barcode"
+                  aria-label="scan barcode"
+                >
+                  <ScanLine className="h-4 w-4" />
+                </Button>
+              </div>
               <datalist id="sku-list">
                 {products.map((p) => (
                   <option key={p.id} value={p.sku}>
@@ -103,6 +130,7 @@ function SalesPage() {
               <select
                 id="payment"
                 name="payment"
+                suppressHydrationWarning
                 className="h-10 w-full rounded-sm border border-input bg-background px-3 font-mono text-sm uppercase tracking-wide text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
               >
                 <option value="cash">cash</option>
