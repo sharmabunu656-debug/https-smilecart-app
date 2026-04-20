@@ -188,6 +188,12 @@ function SalesPage() {
           </Table>
         </div>
       </section>
+
+      <BarcodeScanner
+        open={scannerOpen}
+        onOpenChange={setScannerOpen}
+        onDetected={handleScan}
+      />
     </main>
   );
 }
