@@ -172,6 +172,7 @@ function ProductsPage() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-8"></TableHead>
                 <TableHead>sku</TableHead>
                 <TableHead>name</TableHead>
                 <TableHead>category</TableHead>
@@ -179,12 +180,13 @@ function ProductsPage() {
                 <TableHead className="text-right">selling</TableHead>
                 <TableHead className="text-right">margin</TableHead>
                 <TableHead className="text-right">stock</TableHead>
+                <TableHead className="text-right">labels</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center text-muted-foreground">
                     no products match.
                   </TableCell>
                 </TableRow>
@@ -192,8 +194,16 @@ function ProductsPage() {
               {filtered.map((p) => {
                 const margin = p.sellingPrice - p.costPrice;
                 const low = p.stock <= p.lowStockAt;
+                const isSelected = p.id in selected;
                 return (
                   <TableRow key={p.id}>
+                    <TableCell>
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={() => toggle(p.id)}
+                        aria-label={`select ${p.sku} for label printing`}
+                      />
+                    </TableCell>
                     <TableCell className="font-mono text-primary">{p.sku}</TableCell>
                     <TableCell className="font-mono">{p.name}</TableCell>
                     <TableCell className="label-mono text-muted-foreground">{p.category}</TableCell>
@@ -204,6 +214,18 @@ function ProductsPage() {
                     </TableCell>
                     <TableCell className={`text-right font-mono ${low ? "text-warning" : "text-foreground"}`}>
                       {formatNumberIN(p.stock)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <input
+                        type="number"
+                        min={1}
+                        max={99}
+                        value={selected[p.id] ?? ""}
+                        disabled={!isSelected}
+                        onChange={(e) => setQty(p.id, Number(e.target.value))}
+                        placeholder="–"
+                        className="h-8 w-14 rounded-sm border border-input bg-background px-2 text-right font-mono text-xs text-foreground focus:border-primary focus:outline-none disabled:opacity-40"
+                      />
                     </TableCell>
                   </TableRow>
                 );
