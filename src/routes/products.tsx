@@ -1,11 +1,12 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Printer } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { useShop } from "@/lib/shop-store";
 import { formatINR, formatNumberIN } from "@/lib/currency";
+import { LabelSheet, type LabelItem } from "@/components/LabelSheet";
 
 export const Route = createFileRoute("/products")({
   head: () => ({
@@ -31,6 +33,33 @@ function ProductsPage() {
   const { products, addProduct } = useShop();
   const [query, setQuery] = React.useState("");
   const [category, setCategory] = React.useState("");
+  const [selected, setSelected] = React.useState<Record<string, number>>({});
+  const [sheetOpen, setSheetOpen] = React.useState(false);
+
+  const toggle = (id: string) =>
+    setSelected((s) => {
+      const next = { ...s };
+      if (next[id]) delete next[id];
+      else next[id] = 1;
+      return next;
+    });
+
+  const setQty = (id: string, qty: number) =>
+    setSelected((s) => ({ ...s, [id]: Math.max(1, Math.min(99, qty || 1)) }));
+
+  const labelItems: LabelItem[] = React.useMemo(
+    () =>
+      Object.entries(selected)
+        .map(([id, qty]) => {
+          const p = products.find((x) => x.id === id);
+          if (!p) return null;
+          return { sku: p.sku, name: p.name, price: p.sellingPrice, qty };
+        })
+        .filter((x): x is LabelItem => x !== null),
+    [selected, products],
+  );
+
+  const totalLabels = labelItems.reduce((sum, it) => sum + it.qty, 0);
 
   const categories = React.useMemo(
     () => Array.from(new Set(products.map((p) => p.category))).sort(),
@@ -126,12 +155,24 @@ function ProductsPage() {
               ))}
             </select>
           </div>
+          <div className="ml-auto flex items-end">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={totalLabels === 0}
+              onClick={() => setSheetOpen(true)}
+            >
+              <Printer className="mr-1 h-4 w-4" />
+              print labels {totalLabels > 0 && `· ${totalLabels}`}
+            </Button>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-8"></TableHead>
                 <TableHead>sku</TableHead>
                 <TableHead>name</TableHead>
                 <TableHead>category</TableHead>
@@ -139,12 +180,13 @@ function ProductsPage() {
                 <TableHead className="text-right">selling</TableHead>
                 <TableHead className="text-right">margin</TableHead>
                 <TableHead className="text-right">stock</TableHead>
+                <TableHead className="text-right">labels</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center text-muted-foreground">
                     no products match.
                   </TableCell>
                 </TableRow>
@@ -152,8 +194,16 @@ function ProductsPage() {
               {filtered.map((p) => {
                 const margin = p.sellingPrice - p.costPrice;
                 const low = p.stock <= p.lowStockAt;
+                const isSelected = p.id in selected;
                 return (
                   <TableRow key={p.id}>
+                    <TableCell>
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={() => toggle(p.id)}
+                        aria-label={`select ${p.sku} for label printing`}
+                      />
+                    </TableCell>
                     <TableCell className="font-mono text-primary">{p.sku}</TableCell>
                     <TableCell className="font-mono">{p.name}</TableCell>
                     <TableCell className="label-mono text-muted-foreground">{p.category}</TableCell>
@@ -165,6 +215,18 @@ function ProductsPage() {
                     <TableCell className={`text-right font-mono ${low ? "text-warning" : "text-foreground"}`}>
                       {formatNumberIN(p.stock)}
                     </TableCell>
+                    <TableCell className="text-right">
+                      <input
+                        type="number"
+                        min={1}
+                        max={99}
+                        value={selected[p.id] ?? ""}
+                        disabled={!isSelected}
+                        onChange={(e) => setQty(p.id, Number(e.target.value))}
+                        placeholder="–"
+                        className="h-8 w-14 rounded-sm border border-input bg-background px-2 text-right font-mono text-xs text-foreground focus:border-primary focus:outline-none disabled:opacity-40"
+                      />
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -172,6 +234,8 @@ function ProductsPage() {
           </Table>
         </div>
       </section>
+
+      <LabelSheet open={sheetOpen} onOpenChange={setSheetOpen} items={labelItems} />
     </main>
   );
 }
