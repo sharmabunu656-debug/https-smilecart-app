@@ -234,6 +234,8 @@ function ProductsPage() {
           </Table>
         </div>
       </section>
+
+      <LabelSheet open={sheetOpen} onOpenChange={setSheetOpen} items={labelItems} />
     </main>
   );
 }
