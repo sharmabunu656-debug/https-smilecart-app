@@ -155,6 +155,17 @@ function ProductsPage() {
               ))}
             </select>
           </div>
+          <div className="ml-auto flex items-end">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={totalLabels === 0}
+              onClick={() => setSheetOpen(true)}
+            >
+              <Printer className="mr-1 h-4 w-4" />
+              print labels {totalLabels > 0 && `· ${totalLabels}`}
+            </Button>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
