@@ -1,11 +1,12 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Printer } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { useShop } from "@/lib/shop-store";
 import { formatINR, formatNumberIN } from "@/lib/currency";
+import { LabelSheet, type LabelItem } from "@/components/LabelSheet";
 
 export const Route = createFileRoute("/products")({
   head: () => ({
