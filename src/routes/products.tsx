@@ -33,8 +33,33 @@ function ProductsPage() {
   const { products, addProduct } = useShop();
   const [query, setQuery] = React.useState("");
   const [category, setCategory] = React.useState("");
+  const [selected, setSelected] = React.useState<Record<string, number>>({});
+  const [sheetOpen, setSheetOpen] = React.useState(false);
 
-  const categories = React.useMemo(
+  const toggle = (id: string) =>
+    setSelected((s) => {
+      const next = { ...s };
+      if (next[id]) delete next[id];
+      else next[id] = 1;
+      return next;
+    });
+
+  const setQty = (id: string, qty: number) =>
+    setSelected((s) => ({ ...s, [id]: Math.max(1, Math.min(99, qty || 1)) }));
+
+  const labelItems: LabelItem[] = React.useMemo(
+    () =>
+      Object.entries(selected)
+        .map(([id, qty]) => {
+          const p = products.find((x) => x.id === id);
+          if (!p) return null;
+          return { sku: p.sku, name: p.name, price: p.sellingPrice, qty };
+        })
+        .filter((x): x is LabelItem => x !== null),
+    [selected, products],
+  );
+
+  const totalLabels = labelItems.reduce((sum, it) => sum + it.qty, 0);
     () => Array.from(new Set(products.map((p) => p.category))).sort(),
     [products],
   );
