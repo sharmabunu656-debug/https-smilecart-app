@@ -60,6 +60,8 @@ function ProductsPage() {
   );
 
   const totalLabels = labelItems.reduce((sum, it) => sum + it.qty, 0);
+
+  const categories = React.useMemo(
     () => Array.from(new Set(products.map((p) => p.category))).sort(),
     [products],
   );
