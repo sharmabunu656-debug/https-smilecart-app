@@ -94,6 +94,12 @@ function RootComponent() {
               <NavLink to="/purchases">purchases</NavLink>
               <NavLink to="/sales">sales</NavLink>
               <NavLink to="/reports">reports</NavLink>
+              <Link
+                to="/shop"
+                className="ml-2 rounded-sm border border-accent/60 bg-accent/10 px-3 py-1.5 text-accent transition-colors hover:bg-accent/20"
+              >
+                shop_app →
+              </Link>
             </nav>
           </div>
         </header>
