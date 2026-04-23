@@ -279,56 +279,162 @@
    Used only inside /shop routes. POS routes keep dark neon.
    ============================================================ */
 .shop-theme {
-  --shop-bg: oklch(0.98 0.015 75);          /* cream */
-  --shop-card: oklch(1 0 0);                 /* white */
-  --shop-fg: oklch(0.22 0.04 40);            /* deep warm brown */
-  --shop-muted: oklch(0.55 0.03 50);
-  --shop-border: oklch(0.92 0.02 60);
-  --shop-primary: oklch(0.68 0.18 35);       /* warm orange-red */
-  --shop-primary-soft: oklch(0.95 0.05 50);
-  --shop-accent: oklch(0.72 0.16 145);       /* leafy green */
-  --shop-accent-soft: oklch(0.95 0.04 145);
-  --shop-warning: oklch(0.82 0.16 75);       /* sunny */
-  --shop-danger: oklch(0.62 0.22 25);
+  --shop-bg: oklch(0.985 0.012 80);              /* near-white warm cream */
+  --shop-bg-2: oklch(0.965 0.022 70);            /* second cream tone for mesh */
+  --shop-card: oklch(1 0 0);                      /* pure white surface */
+  --shop-card-2: oklch(0.99 0.008 75);           /* tinted card */
+  --shop-fg: oklch(0.2 0.035 35);                 /* near-black warm */
+  --shop-fg-soft: oklch(0.32 0.04 40);
+  --shop-muted: oklch(0.52 0.025 50);
+  --shop-faint: oklch(0.78 0.02 60);
+  --shop-border: oklch(0.93 0.018 65);
+  --shop-border-strong: oklch(0.86 0.025 60);
+  --shop-primary: oklch(0.66 0.19 32);            /* deeper warm orange-red */
+  --shop-primary-2: oklch(0.58 0.21 22);          /* secondary for gradient depth */
+  --shop-primary-soft: oklch(0.96 0.04 55);
+  --shop-primary-tint: oklch(0.93 0.06 50);
+  --shop-accent: oklch(0.62 0.15 155);            /* deeper leafy green */
+  --shop-accent-2: oklch(0.5 0.13 165);
+  --shop-accent-soft: oklch(0.95 0.045 150);
+  --shop-warning: oklch(0.82 0.16 75);
+  --shop-danger: oklch(0.6 0.22 25);
   --shop-discount: oklch(0.95 0.05 145);
-  --shop-shadow: 0 4px 14px -4px oklch(0.5 0.1 35 / 0.18);
+
+  /* Layered shadow system */
+  --shop-shadow-sm: 0 1px 2px oklch(0.3 0.08 35 / 0.06), 0 1px 1px oklch(0.3 0.08 35 / 0.04);
+  --shop-shadow: 0 4px 12px -4px oklch(0.35 0.1 35 / 0.12), 0 2px 4px -2px oklch(0.35 0.1 35 / 0.06);
+  --shop-shadow-md: 0 12px 28px -10px oklch(0.35 0.12 35 / 0.18), 0 4px 8px -4px oklch(0.35 0.1 35 / 0.08);
+  --shop-shadow-lg: 0 24px 48px -16px oklch(0.3 0.12 35 / 0.22), 0 8px 16px -8px oklch(0.3 0.1 35 / 0.1);
+  --shop-shadow-glow: 0 12px 32px -8px oklch(0.66 0.19 32 / 0.35);
+
+  /* Reusable gradients */
+  --shop-mesh-bg:
+    radial-gradient(at 12% 8%, oklch(0.96 0.05 55) 0px, transparent 50%),
+    radial-gradient(at 88% 12%, oklch(0.95 0.045 150) 0px, transparent 45%),
+    radial-gradient(at 50% 96%, oklch(0.97 0.035 75) 0px, transparent 55%);
+  --shop-grad-primary: linear-gradient(135deg, var(--shop-primary) 0%, var(--shop-primary-2) 100%);
+  --shop-grad-accent: linear-gradient(135deg, var(--shop-accent) 0%, var(--shop-accent-2) 100%);
+  --shop-grad-cream: linear-gradient(180deg, var(--shop-bg) 0%, var(--shop-bg-2) 100%);
+
   background: var(--shop-bg);
   color: var(--shop-fg);
   font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  /* Override the global grid background */
-  background-image: radial-gradient(oklch(0.95 0.04 50) 1px, transparent 1px);
-  background-size: 24px 24px;
+  font-feature-settings: "ss01", "cv01", "cv11";
+  letter-spacing: -0.005em;
+  background-image: var(--shop-mesh-bg);
   background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-.shop-theme .font-display { font-family: "Fraunces", "Plus Jakarta Sans", serif; font-weight: 800; letter-spacing: -0.01em; }
+.shop-theme .font-display {
+  font-family: "Fraunces", "Plus Jakarta Sans", serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  font-optical-sizing: auto;
+}
+.shop-theme .font-mono-num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
 
 @layer utilities {
   .bg-shop-bg { background-color: var(--shop-bg); }
+  .bg-shop-bg-2 { background-color: var(--shop-bg-2); }
   .bg-shop-card { background-color: var(--shop-card); }
+  .bg-shop-card-2 { background-color: var(--shop-card-2); }
   .bg-shop-primary { background-color: var(--shop-primary); }
   .bg-shop-primary-soft { background-color: var(--shop-primary-soft); }
+  .bg-shop-primary-tint { background-color: var(--shop-primary-tint); }
   .bg-shop-accent { background-color: var(--shop-accent); }
   .bg-shop-accent-soft { background-color: var(--shop-accent-soft); }
   .bg-shop-discount { background-color: var(--shop-discount); }
+  .bg-shop-grad-primary { background-image: var(--shop-grad-primary); }
+  .bg-shop-grad-accent { background-image: var(--shop-grad-accent); }
+  .bg-shop-grad-cream { background-image: var(--shop-grad-cream); }
+  .bg-shop-mesh { background-image: var(--shop-mesh-bg); }
   .text-shop-fg { color: var(--shop-fg); }
+  .text-shop-fg-soft { color: var(--shop-fg-soft); }
   .text-shop-muted { color: var(--shop-muted); }
+  .text-shop-faint { color: var(--shop-faint); }
   .text-shop-primary { color: var(--shop-primary); }
   .text-shop-accent { color: var(--shop-accent); }
   .text-shop-danger { color: var(--shop-danger); }
   .border-shop-border { border-color: var(--shop-border); }
+  .border-shop-border-strong { border-color: var(--shop-border-strong); }
   .border-shop-primary { border-color: var(--shop-primary); }
+  .shadow-shop-sm { box-shadow: var(--shop-shadow-sm); }
   .shadow-shop { box-shadow: var(--shop-shadow); }
+  .shadow-shop-md { box-shadow: var(--shop-shadow-md); }
+  .shadow-shop-lg { box-shadow: var(--shop-shadow-lg); }
+  .shadow-shop-glow { box-shadow: var(--shop-shadow-glow); }
   .ring-shop-primary { --tw-ring-color: var(--shop-primary); }
+
+  /* Polished surfaces */
+  .shop-surface {
+    background: var(--shop-card);
+    box-shadow:
+      var(--shop-shadow),
+      inset 0 1px 0 oklch(1 0 0 / 0.6),
+      inset 0 0 0 1px oklch(0.93 0.018 65 / 0.7);
+  }
+  .shop-surface-elevated {
+    background: linear-gradient(180deg, oklch(1 0 0) 0%, var(--shop-card-2) 100%);
+    box-shadow:
+      var(--shop-shadow-md),
+      inset 0 1px 0 oklch(1 0 0 / 0.8),
+      inset 0 0 0 1px oklch(0.93 0.018 65 / 0.7);
+  }
+  .shop-glass {
+    background: oklch(1 0 0 / 0.72);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    border: 1px solid oklch(1 0 0 / 0.5);
+  }
+  .shop-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .shop-divider-dot {
+    background-image: radial-gradient(oklch(0.86 0.025 60) 1px, transparent 1px);
+    background-size: 8px 8px;
+    background-position: center;
+  }
 }
 
 @keyframes pop-in {
-  0% { transform: scale(0.8); opacity: 0; }
-  60% { transform: scale(1.05); opacity: 1; }
+  0% { transform: scale(0.85); opacity: 0; }
+  60% { transform: scale(1.04); opacity: 1; }
   100% { transform: scale(1); }
 }
 @keyframes shop-fade-up {
-  0% { opacity: 0; transform: translateY(8px); }
+  0% { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-.shop-theme .animate-pop-in { animation: pop-in 240ms cubic-bezier(.34,1.56,.64,1); }
-.shop-theme .animate-fade-up { animation: shop-fade-up 320ms ease-out both; }
+@keyframes shop-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes shop-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.shop-theme .animate-pop-in { animation: pop-in 280ms cubic-bezier(.34,1.56,.64,1); }
+.shop-theme .animate-fade-up { animation: shop-fade-up 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.shop-theme .animate-float { animation: shop-float 3.5s ease-in-out infinite; }
+.shop-theme .skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--shop-card) 0%,
+    var(--shop-bg-2) 50%,
+    var(--shop-card) 100%
+  );
+  background-size: 200% 100%;
+  animation: shop-shimmer 1.6s ease-in-out infinite;
+}
