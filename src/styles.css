@@ -1,7 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -273,3 +273,62 @@
     border-bottom-width: 2px; border-right-width: 2px;
   }
 }
+
+/* ============================================================
+   SHOPPER THEME — warm & playful, scoped under .shop-theme
+   Used only inside /shop routes. POS routes keep dark neon.
+   ============================================================ */
+.shop-theme {
+  --shop-bg: oklch(0.98 0.015 75);          /* cream */
+  --shop-card: oklch(1 0 0);                 /* white */
+  --shop-fg: oklch(0.22 0.04 40);            /* deep warm brown */
+  --shop-muted: oklch(0.55 0.03 50);
+  --shop-border: oklch(0.92 0.02 60);
+  --shop-primary: oklch(0.68 0.18 35);       /* warm orange-red */
+  --shop-primary-soft: oklch(0.95 0.05 50);
+  --shop-accent: oklch(0.72 0.16 145);       /* leafy green */
+  --shop-accent-soft: oklch(0.95 0.04 145);
+  --shop-warning: oklch(0.82 0.16 75);       /* sunny */
+  --shop-danger: oklch(0.62 0.22 25);
+  --shop-discount: oklch(0.95 0.05 145);
+  --shop-shadow: 0 4px 14px -4px oklch(0.5 0.1 35 / 0.18);
+  background: var(--shop-bg);
+  color: var(--shop-fg);
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  /* Override the global grid background */
+  background-image: radial-gradient(oklch(0.95 0.04 50) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
+}
+.shop-theme .font-display { font-family: "Fraunces", "Plus Jakarta Sans", serif; font-weight: 800; letter-spacing: -0.01em; }
+
+@layer utilities {
+  .bg-shop-bg { background-color: var(--shop-bg); }
+  .bg-shop-card { background-color: var(--shop-card); }
+  .bg-shop-primary { background-color: var(--shop-primary); }
+  .bg-shop-primary-soft { background-color: var(--shop-primary-soft); }
+  .bg-shop-accent { background-color: var(--shop-accent); }
+  .bg-shop-accent-soft { background-color: var(--shop-accent-soft); }
+  .bg-shop-discount { background-color: var(--shop-discount); }
+  .text-shop-fg { color: var(--shop-fg); }
+  .text-shop-muted { color: var(--shop-muted); }
+  .text-shop-primary { color: var(--shop-primary); }
+  .text-shop-accent { color: var(--shop-accent); }
+  .text-shop-danger { color: var(--shop-danger); }
+  .border-shop-border { border-color: var(--shop-border); }
+  .border-shop-primary { border-color: var(--shop-primary); }
+  .shadow-shop { box-shadow: var(--shop-shadow); }
+  .ring-shop-primary { --tw-ring-color: var(--shop-primary); }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes shop-fade-up {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.shop-theme .animate-pop-in { animation: pop-in 240ms cubic-bezier(.34,1.56,.64,1); }
+.shop-theme .animate-fade-up { animation: shop-fade-up 320ms ease-out both; }
