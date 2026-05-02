@@ -3,6 +3,7 @@ import * as React from "react";
 import { Check, Clock, Package, Truck, Home, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useShopAuth } from "@/lib/shop-auth";
+import { friendlyError } from "@/lib/friendly-error";
 import { formatINR } from "@/lib/currency";
 import { toast } from "sonner";
 

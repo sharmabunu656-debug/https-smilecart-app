@@ -6,6 +6,7 @@ import { useShopAuth } from "@/lib/shop-auth";
 import { useShopUserItems } from "@/lib/shop-user-items";
 import { discountPct, type ShopProduct } from "@/components/shop/ProductCard";
 import { formatINR } from "@/lib/currency";
+import { friendlyError } from "@/lib/friendly-error";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/shop/product/$id")({
