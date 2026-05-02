@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Plus, Search, Printer } from "lucide-react";
+import { Plus, Search, Printer, ScanLine, Tag } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import {
 import { useShop } from "@/lib/shop-store";
 import { formatINR, formatNumberIN } from "@/lib/currency";
 import { LabelSheet, type LabelItem } from "@/components/LabelSheet";
+import { BarcodeScanner } from "@/components/BarcodeScanner";
 
 export const Route = createFileRoute("/products")({
   head: () => ({
@@ -35,6 +36,36 @@ function ProductsPage() {
   const [category, setCategory] = React.useState("");
   const [selected, setSelected] = React.useState<Record<string, number>>({});
   const [sheetOpen, setSheetOpen] = React.useState(false);
+  const [scanOpen, setScanOpen] = React.useState(false);
+  const skuInputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const handleScanned = React.useCallback(
+    (text: string) => {
+      const code = text.trim();
+      if (!code) return;
+      const match = products.find(
+        (p) => p.sku.toLowerCase() === code.toLowerCase(),
+      );
+      if (match) {
+        // Found: highlight by filtering, and pre-select for label printing.
+        setQuery(code);
+        setSelected((s) => ({ ...s, [match.id]: s[match.id] ?? 1 }));
+        toast.success(`scanned ${match.sku} · ${match.name}`);
+      } else {
+        // Not found: pre-fill the SKU field of the add-product form.
+        setQuery("");
+        toast.message(`new sku: ${code}`, {
+          description: "fill in the rest and add to inventory.",
+        });
+        if (skuInputRef.current) {
+          skuInputRef.current.value = code;
+          skuInputRef.current.focus();
+          skuInputRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+    },
+    [products],
+  );
 
   const toggle = (id: string) =>
     setSelected((s) => {
@@ -111,7 +142,10 @@ function ProductsPage() {
       <section className="mb-6 rounded-sm border border-border bg-card/40 p-4 sm:p-6">
         <p className="label-mono mb-4 text-primary">// add product</p>
         <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Field id="sku" label="sku" placeholder="MLK-001" />
+          <div className="space-y-1.5">
+            <Label htmlFor="sku">sku</Label>
+            <Input id="sku" name="sku" ref={skuInputRef} placeholder="MLK-001" />
+          </div>
           <Field id="name" label="name" placeholder="product name" />
           <Field id="category" label="category" placeholder="dairy / produce" />
           <Field id="costPrice" label="cost price (₹)" type="number" placeholder="0" />
@@ -124,6 +158,53 @@ function ProductsPage() {
             </Button>
           </div>
         </form>
+      </section>
+
+      <section className="mb-6 rounded-sm border border-border bg-card/40 p-4 sm:p-6">
+        <p className="label-mono mb-4 text-primary">// barcode tools</p>
+        <div className="grid gap-4 md:grid-cols-2">
+          <article className="flex flex-col justify-between gap-3 rounded-sm border border-border bg-background/40 p-4">
+            <div>
+              <div className="mb-1 flex items-center gap-2 font-mono uppercase tracking-wider text-foreground">
+                <ScanLine className="h-4 w-4 text-primary" />
+                scan<span className="text-primary">_</span>barcode
+              </div>
+              <p className="label-mono text-muted-foreground">
+                use the rear camera to scan a product barcode. matches are highlighted and queued for label printing; new codes pre-fill the sku field.
+              </p>
+            </div>
+            <Button type="button" variant="neon" onClick={() => setScanOpen(true)} className="self-start">
+              <ScanLine className="mr-1 h-4 w-4" /> open scanner
+            </Button>
+          </article>
+
+          <article className="flex flex-col justify-between gap-3 rounded-sm border border-border bg-background/40 p-4">
+            <div>
+              <div className="mb-1 flex items-center gap-2 font-mono uppercase tracking-wider text-foreground">
+                <Tag className="h-4 w-4 text-primary" />
+                print<span className="text-primary">_</span>labels
+              </div>
+              <p className="label-mono text-muted-foreground">
+                tick products in the catalog below, set the quantity per sku, then print a 50×30mm code128 sticker sheet.
+              </p>
+              {totalLabels > 0 && (
+                <p className="label-mono mt-2 text-primary">
+                  // {totalLabels} label{totalLabels === 1 ? "" : "s"} · {labelItems.length} sku{labelItems.length === 1 ? "" : "s"} queued
+                </p>
+              )}
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setSheetOpen(true)}
+              disabled={totalLabels === 0}
+              className="self-start"
+            >
+              <Printer className="mr-1 h-4 w-4" />
+              {totalLabels === 0 ? "select products to print" : `print ${totalLabels} label${totalLabels === 1 ? "" : "s"}`}
+            </Button>
+          </article>
+        </div>
       </section>
 
       <section className="rounded-sm border border-border bg-card/40 p-4 sm:p-6">
@@ -236,6 +317,7 @@ function ProductsPage() {
       </section>
 
       <LabelSheet open={sheetOpen} onOpenChange={setSheetOpen} items={labelItems} />
+      <BarcodeScanner open={scanOpen} onOpenChange={setScanOpen} onDetected={handleScanned} />
     </main>
   );
 }
