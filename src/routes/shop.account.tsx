@@ -4,6 +4,7 @@ import { LogOut, MapPin, Package, Heart, ShieldCheck, ChevronRight, User as User
 import { useShopAuth } from "@/lib/shop-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { friendlyError } from "@/lib/friendly-error";
 
 export const Route = createFileRoute("/shop/account")({
   component: AccountPage,
@@ -43,7 +44,7 @@ function AccountPage() {
       .from("profiles")
       .upsert({ user_id: user.id, full_name: name, phone }, { onConflict: "user_id" });
     setSaving(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not save profile."));
     else {
       toast.success("Profile updated");
       setEditing(false);
