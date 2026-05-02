@@ -6,6 +6,7 @@ import { useShopAuth } from "@/lib/shop-auth";
 import { useShopUserItems } from "@/lib/shop-user-items";
 import { discountPct, type ShopProduct } from "@/components/shop/ProductCard";
 import { formatINR } from "@/lib/currency";
+import { friendlyError } from "@/lib/friendly-error";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/shop/product/$id")({
@@ -60,7 +61,7 @@ function ProductDetail() {
     const { error } = await supabase
       .from("cart_items")
       .upsert({ user_id: user.id, product_id: product.id, qty: next }, { onConflict: "user_id,product_id" });
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not update your cart."));
     else setCartQty(product.id, next);
   };
 

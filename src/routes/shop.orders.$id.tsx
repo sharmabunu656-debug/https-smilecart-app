@@ -3,6 +3,7 @@ import * as React from "react";
 import { Check, Clock, Package, Truck, Home, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useShopAuth } from "@/lib/shop-auth";
+import { friendlyError } from "@/lib/friendly-error";
 import { formatINR } from "@/lib/currency";
 import { toast } from "sonner";
 
@@ -74,7 +75,7 @@ function OrderDetail() {
     if (!user) return;
     if (!confirm("Cancel this order?")) return;
     const { error } = await supabase.from("orders").update({ status: "cancelled" }).eq("id", order.id);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not cancel this order."));
     else {
       toast.success("Order cancelled");
       load();
