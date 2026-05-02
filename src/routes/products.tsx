@@ -317,6 +317,7 @@ function ProductsPage() {
       </section>
 
       <LabelSheet open={sheetOpen} onOpenChange={setSheetOpen} items={labelItems} />
+      <BarcodeScanner open={scanOpen} onOpenChange={setScanOpen} onDetected={handleScanned} />
     </main>
   );
 }
