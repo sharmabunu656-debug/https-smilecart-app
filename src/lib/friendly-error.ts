@@ -21,8 +21,15 @@ export function friendlyError(err: MaybeError, fallback = "Something went wrong.
     console.error("[supabase error]", err);
   }
   if (err.code && CODE_MESSAGES[err.code]) return CODE_MESSAGES[err.code];
-  if (err.message?.toLowerCase().includes("row-level security")) {
+  const msg = err.message?.toLowerCase() ?? "";
+  if (msg.includes("row-level security")) {
     return "You do not have permission to perform this action.";
+  }
+  if (msg.includes("exceed available stock") || msg.includes("exceeds available stock")) {
+    return "One or more items are out of stock. Please update your cart and try again.";
+  }
+  if (msg.includes("product is not available")) {
+    return "This product is no longer available.";
   }
   return fallback;
 }
