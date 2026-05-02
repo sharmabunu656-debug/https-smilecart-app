@@ -4,6 +4,7 @@ import { Heart, Plus, Minus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useShopAuth } from "@/lib/shop-auth";
 import { formatINR } from "@/lib/currency";
+import { friendlyError } from "@/lib/friendly-error";
 import { toast } from "sonner";
 
 export type ShopProduct = {

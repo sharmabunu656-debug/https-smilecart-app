@@ -74,7 +74,7 @@ function OrderDetail() {
     if (!user) return;
     if (!confirm("Cancel this order?")) return;
     const { error } = await supabase.from("orders").update({ status: "cancelled" }).eq("id", order.id);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not cancel this order."));
     else {
       toast.success("Order cancelled");
       load();

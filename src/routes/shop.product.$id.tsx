@@ -60,7 +60,7 @@ function ProductDetail() {
     const { error } = await supabase
       .from("cart_items")
       .upsert({ user_id: user.id, product_id: product.id, qty: next }, { onConflict: "user_id,product_id" });
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not update your cart."));
     else setCartQty(product.id, next);
   };
 
