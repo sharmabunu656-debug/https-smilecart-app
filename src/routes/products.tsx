@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Plus, Search, Printer } from "lucide-react";
+import { Plus, Search, Printer, ScanLine, Tag } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import {
 import { useShop } from "@/lib/shop-store";
 import { formatINR, formatNumberIN } from "@/lib/currency";
 import { LabelSheet, type LabelItem } from "@/components/LabelSheet";
+import { BarcodeScanner } from "@/components/BarcodeScanner";
 
 export const Route = createFileRoute("/products")({
   head: () => ({
@@ -35,6 +36,36 @@ function ProductsPage() {
   const [category, setCategory] = React.useState("");
   const [selected, setSelected] = React.useState<Record<string, number>>({});
   const [sheetOpen, setSheetOpen] = React.useState(false);
+  const [scanOpen, setScanOpen] = React.useState(false);
+  const skuInputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const handleScanned = React.useCallback(
+    (text: string) => {
+      const code = text.trim();
+      if (!code) return;
+      const match = products.find(
+        (p) => p.sku.toLowerCase() === code.toLowerCase(),
+      );
+      if (match) {
+        // Found: highlight by filtering, and pre-select for label printing.
+        setQuery(code);
+        setSelected((s) => ({ ...s, [match.id]: s[match.id] ?? 1 }));
+        toast.success(`scanned ${match.sku} · ${match.name}`);
+      } else {
+        // Not found: pre-fill the SKU field of the add-product form.
+        setQuery("");
+        toast.message(`new sku: ${code}`, {
+          description: "fill in the rest and add to inventory.",
+        });
+        if (skuInputRef.current) {
+          skuInputRef.current.value = code;
+          skuInputRef.current.focus();
+          skuInputRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+    },
+    [products],
+  );
 
   const toggle = (id: string) =>
     setSelected((s) => {
