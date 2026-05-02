@@ -4,6 +4,7 @@ import { MapPin, Plus, Trash2, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useShopAuth } from "@/lib/shop-auth";
 import { toast } from "sonner";
+import { friendlyError } from "@/lib/friendly-error";
 
 export const Route = createFileRoute("/shop/addresses")({
   component: AddressesPage,
@@ -163,7 +164,7 @@ export function AddressForm({
       is_default: isFirst,
     });
     setSaving(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not save address."));
     else {
       toast.success("Address saved");
       onSaved();

@@ -5,6 +5,7 @@ import { useShopAuth } from "@/lib/shop-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatINR } from "@/lib/currency";
 import { toast } from "sonner";
+import { friendlyError } from "@/lib/friendly-error";
 
 export const Route = createFileRoute("/shop/admin")({
   component: AdminPanel,
@@ -40,7 +41,7 @@ function AdminPanel() {
       }
       const { error } = await supabase.from("user_roles").insert({ user_id: user.id, role: "admin" });
       setBecoming(false);
-      if (error) toast.error(error.message);
+      if (error) toast.error(friendlyError(error, "Could not claim admin access."));
       else {
         toast.success("You are now an admin. Reload to continue.");
         setTimeout(() => window.location.reload(), 800);
@@ -136,7 +137,7 @@ function AdminOrders() {
 
   const setStatus = async (id: string, status: AdminOrder["status"]) => {
     const { error } = await supabase.from("orders").update({ status }).eq("id", id);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not update order status."));
     else toast.success(`Marked as ${status}`);
   };
 
@@ -200,7 +201,7 @@ function AdminProducts() {
 
   const update = async (id: string, patch: Partial<AdminProduct>) => {
     const { error } = await supabase.from("shop_products").update(patch).eq("id", id);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not update product."));
     else load();
   };
 
