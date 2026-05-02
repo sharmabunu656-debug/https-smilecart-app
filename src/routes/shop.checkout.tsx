@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useShopAuth } from "@/lib/shop-auth";
 import { formatINR } from "@/lib/currency";
 import { toast } from "sonner";
+import { friendlyError } from "@/lib/friendly-error";
 import { AddressForm } from "./shop.addresses";
 
 export const Route = createFileRoute("/shop/checkout")({
@@ -109,7 +110,7 @@ function CheckoutPage() {
       .single();
     if (error || !order) {
       setPlacing(false);
-      return toast.error(error?.message ?? "Could not place order");
+      return toast.error(friendlyError(error, "Could not place order."));
     }
 
     const itemRows = cart
@@ -127,7 +128,7 @@ function CheckoutPage() {
     const { error: e2 } = await supabase.from("order_items").insert(itemRows);
     if (e2) {
       setPlacing(false);
-      return toast.error(e2.message);
+      return toast.error(friendlyError(e2, "Could not save order items."));
     }
 
     // Decrement stock + clear cart (best effort, RLS allows admin only for stock — skip if fails)
