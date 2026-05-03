@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import * as React from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useShopAuth } from "@/lib/shop-auth";
 import { formatINR } from "@/lib/currency";
@@ -38,40 +39,44 @@ const STATUS_TONE: Record<string, string> = {
 
 function OrdersPage() {
   const { user, loading } = useShopAuth();
-  const [orders, setOrders] = React.useState<Order[]>([]);
-  const [busy, setBusy] = React.useState(true);
+  const qc = useQueryClient();
 
-  React.useEffect(() => {
-    if (!user) {
-      setBusy(false);
-      return;
-    }
-    let active = true;
-    const load = async () => {
-      const { data } = await supabase
+  const ordersQ = useQuery({
+    queryKey: ["shop", "orders", user?.id ?? "anon"],
+    enabled: !!user,
+    queryFn: async (): Promise<Order[]> => {
+      const { data, error } = await supabase
         .from("orders")
         .select("id, status, payment_method, total, placed_at, order_items(product_name, qty, image_url)")
-        .eq("user_id", user.id)
+        .eq("user_id", user!.id)
         .order("placed_at", { ascending: false });
-      if (!active) return;
-      setOrders((data as Order[]) ?? []);
-      setBusy(false);
-    };
-    load();
+      if (error) throw error;
+      return (data as Order[]) ?? [];
+    },
+    meta: { persist: true },
+    staleTime: 30_000,
+  });
 
+  // Live updates — invalidate cached orders when the user's orders change.
+  React.useEffect(() => {
+    if (!user) return;
     const ch = supabase
       .channel(`orders-${user.id}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "orders", filter: `user_id=eq.${user.id}` },
-        load,
+        () => {
+          qc.invalidateQueries({ queryKey: ["shop", "orders", user.id] });
+        },
       )
       .subscribe();
     return () => {
-      active = false;
       supabase.removeChannel(ch);
     };
-  }, [user]);
+  }, [user, qc]);
+
+  const orders = ordersQ.data ?? [];
+  const busy = ordersQ.isLoading && !ordersQ.data;
 
   if (loading || busy) return <div className="h-40 animate-pulse rounded-2xl bg-shop-card" />;
 

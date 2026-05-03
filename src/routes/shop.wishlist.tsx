@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import * as React from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Heart, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useShopAuth } from "@/lib/shop-auth";
@@ -17,23 +18,26 @@ type Row = {
 
 function WishlistPage() {
   const { user, loading } = useShopAuth();
-  const [items, setItems] = React.useState<Row[]>([]);
-  const [busy, setBusy] = React.useState(true);
+  const qc = useQueryClient();
 
-  const load = React.useCallback(async () => {
-    if (!user) return setBusy(false);
-    const { data } = await supabase
-      .from("wishlist_items")
-      .select("id, product_id, shop_products(id, name, image_url, unit, price, mrp)")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
-    setItems((data as Row[]) ?? []);
-    setBusy(false);
-  }, [user]);
+  const wishlistQ = useQuery({
+    queryKey: ["shop", "wishlist", user?.id ?? "anon"],
+    enabled: !!user,
+    queryFn: async (): Promise<Row[]> => {
+      const { data, error } = await supabase
+        .from("wishlist_items")
+        .select("id, product_id, shop_products(id, name, image_url, unit, price, mrp)")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data as Row[]) ?? [];
+    },
+    meta: { persist: true },
+    staleTime: 60_000,
+  });
 
-  React.useEffect(() => {
-    load();
-  }, [load]);
+  const items = wishlistQ.data ?? [];
+  const busy = wishlistQ.isLoading && !wishlistQ.data;
 
   if (loading || busy) return <div className="h-40 animate-pulse rounded-2xl bg-shop-card" />;
 

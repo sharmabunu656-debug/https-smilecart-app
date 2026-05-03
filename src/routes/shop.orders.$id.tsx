@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import * as React from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, Clock, Package, Truck, Home, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useShopAuth } from "@/lib/shop-auth";
@@ -41,29 +42,37 @@ const STEPS = [
 function OrderDetail() {
   const { id } = Route.useParams();
   const { user } = useShopAuth();
-  const [order, setOrder] = React.useState<Order | null>(null);
-  const [busy, setBusy] = React.useState(true);
+  const qc = useQueryClient();
 
-  const load = React.useCallback(async () => {
-    const { data } = await supabase
-      .from("orders")
-      .select("*, order_items(*)")
-      .eq("id", id)
-      .maybeSingle();
-    setOrder(data as Order | null);
-    setBusy(false);
-  }, [id]);
+  const orderQ = useQuery({
+    queryKey: ["shop", "order", id],
+    queryFn: async (): Promise<Order | null> => {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("*, order_items(*)")
+        .eq("id", id)
+        .maybeSingle();
+      if (error) throw error;
+      return (data as Order | null) ?? null;
+    },
+    meta: { persist: true },
+    staleTime: 30_000,
+  });
 
   React.useEffect(() => {
-    load();
     const ch = supabase
       .channel(`order-${id}`)
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "orders", filter: `id=eq.${id}` }, load)
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "orders", filter: `id=eq.${id}` }, () => {
+        qc.invalidateQueries({ queryKey: ["shop", "order", id] });
+      })
       .subscribe();
     return () => {
       supabase.removeChannel(ch);
     };
-  }, [id, load]);
+  }, [id, qc]);
+
+  const order = orderQ.data ?? null;
+  const busy = orderQ.isLoading && !orderQ.data;
 
   if (busy) return <div className="h-40 animate-pulse rounded-2xl bg-shop-card" />;
   if (!order) return <p className="py-12 text-center text-sm text-shop-muted">Order not found.</p>;
@@ -78,7 +87,8 @@ function OrderDetail() {
     if (error) toast.error(friendlyError(error, "Could not cancel this order."));
     else {
       toast.success("Order cancelled");
-      load();
+      qc.invalidateQueries({ queryKey: ["shop", "order", id] });
+      qc.invalidateQueries({ queryKey: ["shop", "orders"] });
     }
   };
 
