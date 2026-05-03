@@ -59,7 +59,7 @@ export function ProductCard({
         { user_id: user.id, product_id: product.id, qty: 1 },
         { onConflict: "user_id,product_id" },
       );
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not add to cart."));
     else {
       onCartChange(1);
       toast.success("Added to cart");
@@ -83,7 +83,7 @@ export function ProductCard({
         { user_id: user.id, product_id: product.id, qty: next },
         { onConflict: "user_id,product_id" },
       );
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error, "Could not update your cart."));
     else onCartChange(next);
   };
 
