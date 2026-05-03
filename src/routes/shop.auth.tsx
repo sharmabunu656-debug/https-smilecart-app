@@ -4,6 +4,7 @@ import { Mail, Lock, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useShopAuth } from "@/lib/shop-auth";
+import { friendlyAuthError } from "@/lib/friendly-error";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/shop/auth")({
@@ -46,7 +47,8 @@ function AuthPage() {
       }
       navigate({ to: "/shop" });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Something went wrong");
+      const e = err as { message?: string; code?: string } | null;
+      toast.error(friendlyAuthError(e));
     } finally {
       setBusy(false);
     }
@@ -58,7 +60,7 @@ function AuthPage() {
       redirect_uri: `${window.location.origin}/shop`,
     });
     if (result.error) {
-      toast.error(result.error.message);
+      toast.error(friendlyAuthError(result.error, "Could not sign in with Google."));
       setBusy(false);
       return;
     }
