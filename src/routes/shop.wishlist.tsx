@@ -87,7 +87,7 @@ function WishlistPage() {
               <button
                 onClick={async () => {
                   await supabase.from("wishlist_items").delete().eq("id", r.id);
-                  load();
+                  qc.invalidateQueries({ queryKey: ["shop", "wishlist", user?.id ?? "anon"] });
                 }}
                 className="text-shop-muted active:scale-90"
               >
