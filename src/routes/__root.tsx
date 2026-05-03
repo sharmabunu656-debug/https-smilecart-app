@@ -1,8 +1,12 @@
+import * as React from "react";
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Terminal } from "lucide-react";
 
 import { ShopProvider } from "@/lib/shop-store";
 import { Toaster } from "@/components/ui/sonner";
+import { getQueryClient } from "@/lib/query-client";
+import { registerPwa } from "@/lib/pwa-register";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -44,12 +48,11 @@ export const Route = createRootRoute({
       { name: "twitter:description", content: "Shop Smarter is a grocery shop management app for tracking inventory, sales, and profits." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/p6Yw4hk81UPyt9Tg3J4WEb9211N2/social-images/social-1776572929817-sharma_store.webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/p6Yw4hk81UPyt9Tg3J4WEb9211N2/social-images/social-1776572929817-sharma_store.webp" },
+      { name: "theme-color", content: "#0b0b0f" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),
   shellComponent: RootShell,
@@ -72,7 +75,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  React.useEffect(() => {
+    registerPwa();
+  }, []);
+
+  const queryClient = React.useMemo(() => getQueryClient(), []);
+
   return (
+    <QueryClientProvider client={queryClient}>
     <ShopProvider>
       <div className="min-h-screen scanlines">
         <header className="border-b border-border bg-card/40 backdrop-blur">
@@ -107,6 +117,7 @@ function RootComponent() {
         <Toaster />
       </div>
     </ShopProvider>
+    </QueryClientProvider>
   );
 }
 
