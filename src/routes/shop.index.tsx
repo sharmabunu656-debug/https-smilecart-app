@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import * as React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductCard, type ShopProduct } from "@/components/shop/ProductCard";
 import { useShopUserItems } from "@/lib/shop-user-items";
@@ -12,27 +13,43 @@ export const Route = createFileRoute("/shop/")({
 type Category = { id: string; slug: string; name: string; emoji: string | null };
 
 function ShopHome() {
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [featured, setFeatured] = React.useState<ShopProduct[]>([]);
-  const [loading, setLoading] = React.useState(true);
   const { cart, wishlist, setCartQty, setWishlistFor } = useShopUserItems();
 
-  React.useEffect(() => {
-    Promise.all([
-      supabase.from("categories").select("id, slug, name, emoji").order("sort_order"),
-      supabase
+  const categoriesQ = useQuery({
+    queryKey: ["shop", "categories"],
+    queryFn: async (): Promise<Category[]> => {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("id, slug, name, emoji")
+        .order("sort_order");
+      if (error) throw error;
+      return data ?? [];
+    },
+    meta: { persist: true },
+    staleTime: 5 * 60_000,
+  });
+
+  const featuredQ = useQuery({
+    queryKey: ["shop", "products", "featured"],
+    queryFn: async (): Promise<ShopProduct[]> => {
+      const { data, error } = await supabase
         .from("shop_products")
         .select("id, name, description, image_url, unit, price, mrp, stock")
         .eq("is_active", true)
         .eq("is_featured", true)
         .order("created_at", { ascending: false })
-        .limit(8),
-    ]).then(([c, p]) => {
-      setCategories(c.data ?? []);
-      setFeatured(p.data ?? []);
-      setLoading(false);
-    });
-  }, []);
+        .limit(8);
+      if (error) throw error;
+      return data ?? [];
+    },
+    meta: { persist: true },
+    staleTime: 60_000,
+  });
+
+  const categories = categoriesQ.data ?? [];
+  const featured = featuredQ.data ?? [];
+  // Show skeletons only on the very first load (no cached data yet).
+  const loading = featuredQ.isLoading && !featuredQ.data;
 
   return (
     <div className="space-y-7 pb-4">

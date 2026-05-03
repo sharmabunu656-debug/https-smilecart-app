@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import * as React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductCard, type ShopProduct } from "@/components/shop/ProductCard";
@@ -11,25 +12,34 @@ export const Route = createFileRoute("/shop/search")({
 
 function SearchPage() {
   const [q, setQ] = React.useState("");
-  const [results, setResults] = React.useState<ShopProduct[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [debouncedQ, setDebouncedQ] = React.useState("");
   const { cart, wishlist, setCartQty, setWishlistFor } = useShopUserItems();
 
   React.useEffect(() => {
-    setLoading(true);
-    const t = setTimeout(async () => {
-      let query = supabase
+    const t = setTimeout(() => setDebouncedQ(q.trim()), 200);
+    return () => clearTimeout(t);
+  }, [q]);
+
+  const query = useQuery({
+    queryKey: ["shop", "search", debouncedQ],
+    queryFn: async (): Promise<ShopProduct[]> => {
+      let qb = supabase
         .from("shop_products")
         .select("id, name, description, image_url, unit, price, mrp, stock")
         .eq("is_active", true)
         .order("name");
-      if (q.trim()) query = query.ilike("name", `%${q.trim()}%`);
-      const { data } = await query.limit(50);
-      setResults(data ?? []);
-      setLoading(false);
-    }, 200);
-    return () => clearTimeout(t);
-  }, [q]);
+      if (debouncedQ) qb = qb.ilike("name", `%${debouncedQ}%`);
+      const { data, error } = await qb.limit(50);
+      if (error) throw error;
+      return data ?? [];
+    },
+    // Cache the empty-query "all products" view aggressively so the page is instant.
+    meta: { persist: debouncedQ === "" },
+    staleTime: 60_000,
+  });
+
+  const results = query.data ?? [];
+  const loading = query.isLoading && !query.data;
 
   return (
     <div className="space-y-4">
