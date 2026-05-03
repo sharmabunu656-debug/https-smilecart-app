@@ -45,8 +45,8 @@ export function friendlyAuthError(err: MaybeError, fallback = "Could not complet
   if (
     msg.includes("invalid login") ||
     msg.includes("invalid credentials") ||
-    msg.includes("email not confirmed") === false &&
-      (msg.includes("user not found") || msg.includes("invalid email or password"))
+    msg.includes("invalid email or password") ||
+    msg.includes("user not found")
   ) {
     return "Invalid email or password.";
   }
