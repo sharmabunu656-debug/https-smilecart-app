@@ -91,7 +91,7 @@ function CheckoutPage() {
     const { data: orderId, error } = await supabase.rpc("place_order", {
       p_address_id: addr.id,
       p_payment_method: payment,
-      p_notes: notes || null,
+      p_notes: notes || undefined,
     });
     setPlacing(false);
     if (error || !orderId) {
