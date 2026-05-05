@@ -26,29 +26,32 @@ function AdminPanel() {
     return <p className="py-12 text-center text-sm text-shop-muted">Sign in to access the admin panel.</p>;
   }
 
+  const claim = React.useCallback(async () => {
+    if (!user) return;
+    setBecoming(true);
+    const { data: adminExists, error: checkErr } = await supabase.rpc("has_any_admin");
+    if (checkErr) {
+      toast.error(friendlyError(checkErr, "Could not verify admin status."));
+      setBecoming(false);
+      return;
+    }
+    if (adminExists) {
+      toast.error("An admin already exists. Ask them to grant you access.");
+      setBecoming(false);
+      return;
+    }
+    const { error } = await supabase.from("user_roles").insert({ user_id: user.id, role: "admin" });
+    setBecoming(false);
+    if (error) {
+      toast.error(friendlyError(error, "Could not claim admin access."));
+    } else {
+      toast.success("You are now an admin. Reload to continue.");
+      setTimeout(() => window.location.reload(), 800);
+    }
+  }, [user]);
+
   // Bootstrap: if no admins exist anywhere, the first signed-in user can claim admin.
   if (!isAdmin) {
-    const claim = async () => {
-      setBecoming(true);
-      const { data: adminExists, error: checkErr } = await supabase.rpc("has_any_admin");
-      if (checkErr) {
-        toast.error(friendlyError(checkErr, "Could not verify admin status."));
-        setBecoming(false);
-        return;
-      }
-      if (adminExists) {
-        toast.error("An admin already exists. Ask them to grant you access.");
-        setBecoming(false);
-        return;
-      }
-      const { error } = await supabase.from("user_roles").insert({ user_id: user.id, role: "admin" });
-      setBecoming(false);
-      if (error) toast.error(friendlyError(error, "Could not claim admin access."));
-      else {
-        toast.success("You are now an admin. Reload to continue.");
-        setTimeout(() => window.location.reload(), 800);
-      }
-    };
     return (
       <div className="flex flex-col items-center gap-3 py-12 text-center">
         <ShieldCheck className="h-12 w-12 text-shop-primary" />
