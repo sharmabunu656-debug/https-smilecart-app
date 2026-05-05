@@ -81,39 +81,52 @@ function RootComponent() {
   }, []);
 
   const queryClient = React.useMemo(() => getQueryClient(), []);
+  const isShop = useIsShopHost();
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  // On the shop subdomain, the only app is the shop. Send root/inventory paths into /shop.
+  React.useEffect(() => {
+    if (!isShop) return;
+    if (pathname === "/" || (!pathname.startsWith("/shop") && !pathname.startsWith("/api"))) {
+      navigate({ to: "/shop", replace: true });
+    }
+  }, [isShop, pathname, navigate]);
 
   return (
     <QueryClientProvider client={queryClient}>
     <ShopProvider>
       <div className="min-h-screen scanlines">
-        <header className="border-b border-border bg-card/40 backdrop-blur">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-primary/60 bg-primary/10 shadow-[var(--glow-primary)]">
-                <Terminal className="h-4 w-4 text-primary" />
-              </div>
-              <div>
-                <h1 className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-foreground">
-                  GROCER<span className="text-primary">//</span>OS
-                </h1>
-                <p className="label-mono text-muted-foreground">v0.2 // shop console</p>
-              </div>
-            </Link>
-            <nav className="flex flex-wrap items-center gap-1 font-mono text-xs uppercase tracking-widest">
-              <NavLink to="/">dashboard</NavLink>
-              <NavLink to="/products">products</NavLink>
-              <NavLink to="/purchases">purchases</NavLink>
-              <NavLink to="/sales">sales</NavLink>
-              <NavLink to="/reports">reports</NavLink>
-              <Link
-                to="/shop"
-                className="ml-2 rounded-sm border border-accent/60 bg-accent/10 px-3 py-1.5 text-accent transition-colors hover:bg-accent/20"
-              >
-                shop_app →
+        {!isShop && (
+          <header className="border-b border-border bg-card/40 backdrop-blur">
+            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+              <Link to="/" className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-primary/60 bg-primary/10 shadow-[var(--glow-primary)]">
+                  <Terminal className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <h1 className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-foreground">
+                    GROCER<span className="text-primary">//</span>OS
+                  </h1>
+                  <p className="label-mono text-muted-foreground">v0.2 // shop console</p>
+                </div>
               </Link>
-            </nav>
-          </div>
-        </header>
+              <nav className="flex flex-wrap items-center gap-1 font-mono text-xs uppercase tracking-widest">
+                <NavLink to="/">dashboard</NavLink>
+                <NavLink to="/products">products</NavLink>
+                <NavLink to="/purchases">purchases</NavLink>
+                <NavLink to="/sales">sales</NavLink>
+                <NavLink to="/reports">reports</NavLink>
+                <Link
+                  to="/shop"
+                  className="ml-2 rounded-sm border border-accent/60 bg-accent/10 px-3 py-1.5 text-accent transition-colors hover:bg-accent/20"
+                >
+                  shop_app →
+                </Link>
+              </nav>
+            </div>
+          </header>
+        )}
         <Outlet />
         <Toaster />
       </div>
