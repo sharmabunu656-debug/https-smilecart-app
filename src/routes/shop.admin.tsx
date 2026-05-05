@@ -30,11 +30,17 @@ function AdminPanel() {
   if (!isAdmin) {
     const claim = async () => {
       setBecoming(true);
-      const { count } = await supabase
-        .from("user_roles")
-        .select("*", { count: "exact", head: true })
-        .eq("role", "admin");
-      if ((count ?? 0) > 0) {
+      const { data: adminExists, error: checkErr } = await supabase.rpc("has_any_admin");
+      if (checkErr) {
+        toast.error(friendlyError(checkErr, "Could not verify admin status."));
+        setBecoming(false);
+        return;
+      }
+      if (adminExists) {
+        toast.error("An admin already exists. Ask them to grant you access.");
+        setBecoming(false);
+        return;
+      }
         toast.error("An admin already exists. Ask them to grant you access.");
         setBecoming(false);
         return;
