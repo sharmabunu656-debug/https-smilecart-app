@@ -88,63 +88,17 @@ function CheckoutPage() {
     }
 
     setPlacing(true);
-    const { data: order, error } = await supabase
-      .from("orders")
-      .insert({
-        user_id: user.id,
-        status: "placed",
-        payment_method: payment,
-        subtotal,
-        delivery_fee: deliveryFee,
-        total,
-        recipient_name: addr.recipient_name,
-        phone: addr.phone,
-        line1: addr.line1,
-        line2: addr.line2,
-        city: addr.city,
-        state: addr.state,
-        pincode: addr.pincode,
-        notes: notes || null,
-      })
-      .select("id")
-      .single();
-    if (error || !order) {
-      setPlacing(false);
+    const { data: orderId, error } = await supabase.rpc("place_order", {
+      p_address_id: addr.id,
+      p_payment_method: payment,
+      p_notes: notes || null,
+    });
+    setPlacing(false);
+    if (error || !orderId) {
       return toast.error(friendlyError(error, "Could not place order."));
     }
-
-    const itemRows = cart
-      .filter((r) => r.shop_products)
-      .map((r) => ({
-        order_id: order.id,
-        product_id: r.shop_products!.id,
-        product_name: r.shop_products!.name,
-        unit: r.shop_products!.unit,
-        image_url: r.shop_products!.image_url,
-        unit_price: r.shop_products!.price,
-        qty: r.qty,
-        line_total: r.shop_products!.price * r.qty,
-      }));
-    const { error: e2 } = await supabase.from("order_items").insert(itemRows);
-    if (e2) {
-      setPlacing(false);
-      return toast.error(friendlyError(e2, "Could not save order items."));
-    }
-
-    // Decrement stock + clear cart (best effort, RLS allows admin only for stock — skip if fails)
-    for (const r of cart) {
-      if (r.shop_products) {
-        await supabase
-          .from("shop_products")
-          .update({ stock: r.shop_products.stock - r.qty })
-          .eq("id", r.shop_products.id);
-      }
-    }
-    await supabase.from("cart_items").delete().eq("user_id", user.id);
-
-    setPlacing(false);
     toast.success("Order placed!");
-    navigate({ to: "/shop/orders/$id", params: { id: order.id } });
+    navigate({ to: "/shop/orders/$id", params: { id: orderId as string } });
   };
 
   return (
