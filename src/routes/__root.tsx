@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Outlet, Link, createRootRoute, HeadContent, Scripts, useNavigate, useRouterState } from "@tanstack/react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Terminal } from "lucide-react";
 
@@ -7,6 +7,7 @@ import { ShopProvider } from "@/lib/shop-store";
 import { Toaster } from "@/components/ui/sonner";
 import { getQueryClient } from "@/lib/query-client";
 import { registerPwa } from "@/lib/pwa-register";
+import { useIsShopHost } from "@/lib/host";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
