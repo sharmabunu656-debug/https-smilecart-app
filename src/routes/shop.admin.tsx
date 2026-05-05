@@ -41,10 +41,6 @@ function AdminPanel() {
         setBecoming(false);
         return;
       }
-        toast.error("An admin already exists. Ask them to grant you access.");
-        setBecoming(false);
-        return;
-      }
       const { error } = await supabase.from("user_roles").insert({ user_id: user.id, role: "admin" });
       setBecoming(false);
       if (error) toast.error(friendlyError(error, "Could not claim admin access."));
