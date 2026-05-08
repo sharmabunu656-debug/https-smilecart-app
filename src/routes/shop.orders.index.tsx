@@ -53,7 +53,6 @@ function OrdersPage() {
       if (error) throw error;
       return (data as Order[]) ?? [];
     },
-    meta: { persist: true },
     staleTime: 30_000,
   });
 
