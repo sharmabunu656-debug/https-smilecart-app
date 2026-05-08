@@ -60,9 +60,16 @@ export function ShopAuthProvider({ children }: { children: React.ReactNode }) {
     if (user) await loadProfileAndRole(user.id);
   }, [user, loadProfileAndRole]);
 
+  const queryClient = useQueryClient();
   const signOut = React.useCallback(async () => {
     await supabase.auth.signOut();
-  }, []);
+    queryClient.clear();
+    try {
+      window.localStorage.removeItem("shop-query-cache-v1");
+    } catch {
+      // localStorage may be unavailable
+    }
+  }, [queryClient]);
 
   const value = React.useMemo(
     () => ({ user, session, profile, isAdmin, loading, refreshProfile, signOut }),
