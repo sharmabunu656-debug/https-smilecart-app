@@ -55,7 +55,6 @@ function OrderDetail() {
       if (error) throw error;
       return (data as Order | null) ?? null;
     },
-    meta: { persist: true },
     staleTime: 30_000,
   });
 
