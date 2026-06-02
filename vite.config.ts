@@ -18,15 +18,15 @@ export default defineConfig({
         filename: "sw.js",
         manifest: false, // We ship our own /manifest.webmanifest in /public
         workbox: {
-          // Don't intercept internal/preview routes.
-          navigateFallbackDenylist: [/^\/~/, /^\/api\//, /^\/sw\.js$/, /^\/manifest\.webmanifest$/],
+          // Don't intercept internal routes or file-like URLs from /public.
+          navigateFallbackDenylist: [/^\/~/, /^\/api\//, /^\/sw\.js$/, /^\/manifest\.webmanifest$/, /\.[^/]+$/],
           cleanupOutdatedCaches: true,
           clientsClaim: true,
           skipWaiting: false, // we control activation via workbox-window
           runtimeCaching: [
             // HTML navigations: NetworkFirst so a fresh deploy is never trapped behind cache.
             {
-              urlPattern: ({ request }) => request.mode === "navigate",
+              urlPattern: ({ url, request }) => request.mode === "navigate" && !/\.[^/]+$/.test(url.pathname),
               handler: "NetworkFirst",
               options: {
                 cacheName: "html-pages",
