@@ -107,7 +107,7 @@ export function ProductCard({
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl shop-surface transition-transform duration-200 active:scale-[0.985]">
+    <div className="group relative overflow-hidden rounded-3xl border border-shop-border-strong bg-shop-card-2 transition-transform duration-200 active:scale-[0.985]">
       <Link
         to="/shop/product/$id"
         params={{ id: product.id }}
@@ -117,7 +117,7 @@ export function ProductCard({
           className="relative flex h-32 items-center justify-center overflow-hidden"
           style={{
             backgroundImage:
-              "radial-gradient(120% 80% at 50% 0%, var(--shop-primary-tint) 0%, var(--shop-primary-soft) 60%, var(--shop-card-2) 100%)",
+              "radial-gradient(120% 80% at 50% 0%, var(--shop-primary-tint) 0%, transparent 70%), linear-gradient(180deg, oklch(0.28 0.06 180 / 0.4), oklch(0.18 0.04 230 / 0.6))",
           }}
         >
           {/* soft grain dots */}
