@@ -107,7 +107,7 @@ export function ProductCard({
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl shop-surface transition-transform duration-200 active:scale-[0.985]">
+    <div className="group relative overflow-hidden rounded-3xl border border-shop-border-strong bg-shop-card-2 transition-transform duration-200 active:scale-[0.985]">
       <Link
         to="/shop/product/$id"
         params={{ id: product.id }}
@@ -117,15 +117,15 @@ export function ProductCard({
           className="relative flex h-32 items-center justify-center overflow-hidden"
           style={{
             backgroundImage:
-              "radial-gradient(120% 80% at 50% 0%, var(--shop-primary-tint) 0%, var(--shop-primary-soft) 60%, var(--shop-card-2) 100%)",
+              "radial-gradient(120% 80% at 50% 0%, var(--shop-primary-tint) 0%, transparent 70%), linear-gradient(180deg, oklch(0.28 0.06 180 / 0.4), oklch(0.18 0.04 230 / 0.6))",
           }}
         >
           {/* soft grain dots */}
           <div
-            className="pointer-events-none absolute inset-0 opacity-[0.35]"
+            className="pointer-events-none absolute inset-0 opacity-[0.18]"
             style={{
               backgroundImage:
-                "radial-gradient(oklch(1 0 0 / 0.6) 1px, transparent 1px)",
+                "radial-gradient(oklch(0.92 0.2 160) 1px, transparent 1px)",
               backgroundSize: "10px 10px",
             }}
           />
@@ -133,13 +133,13 @@ export function ProductCard({
             {product.image_url ?? "🛒"}
           </span>
           {pct > 0 && (
-            <span className="shop-chip absolute left-2.5 top-2.5 bg-shop-grad-accent text-white shadow-shop-sm">
+            <span className="shop-chip absolute left-2.5 top-2.5 bg-shop-accent text-shop-bg shadow-shop-sm">
               −{pct}%
             </span>
           )}
           <button
             onClick={toggleWishlist}
-            className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 shadow-shop-sm transition active:scale-90"
+            className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full border border-shop-border-strong bg-shop-bg/70 shadow-shop-sm backdrop-blur transition active:scale-90"
             aria-label="Wishlist"
           >
             <Heart
@@ -148,7 +148,7 @@ export function ProductCard({
             />
           </button>
           {product.stock > 0 && product.stock <= 5 && (
-            <span className="shop-chip absolute bottom-2.5 left-2.5 bg-white/90 text-shop-danger shadow-shop-sm">
+            <span className="shop-chip absolute bottom-2.5 left-2.5 border border-shop-border-strong bg-shop-bg/80 text-shop-danger backdrop-blur shadow-shop-sm">
               Only {product.stock} left
             </span>
           )}
@@ -175,23 +175,23 @@ export function ProductCard({
           <button
             onClick={addToCart}
             disabled={product.stock <= 0}
-            className="flex w-full items-center justify-center gap-1.5 rounded-full bg-shop-primary-soft py-2 text-[11px] font-extrabold uppercase tracking-[0.1em] text-shop-primary transition hover:bg-shop-primary-tint active:scale-95 disabled:opacity-40"
+            className="flex w-full items-center justify-center gap-1.5 rounded-full bg-shop-primary py-2 text-[11px] font-extrabold uppercase tracking-[0.1em] text-shop-bg transition hover:brightness-110 active:scale-95 disabled:opacity-40"
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={3} />
             {product.stock <= 0 ? "Out of stock" : "Add"}
           </button>
         ) : (
-          <div className="flex items-center justify-between rounded-full bg-shop-grad-primary px-1 py-1 text-white shadow-shop-glow">
+          <div className="flex items-center justify-between rounded-full bg-shop-primary px-1 py-1 text-shop-bg shadow-shop-glow">
             <button
               onClick={() => setQty(cartQty - 1)}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 transition active:scale-90"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-shop-bg/30 transition active:scale-90"
             >
               <Minus className="h-3.5 w-3.5" strokeWidth={3} />
             </button>
             <span className="font-mono-num text-xs font-bold">{cartQty}</span>
             <button
               onClick={() => setQty(cartQty + 1)}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 transition active:scale-90"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-shop-bg/30 transition active:scale-90"
             >
               <Plus className="h-3.5 w-3.5" strokeWidth={3} />
             </button>
