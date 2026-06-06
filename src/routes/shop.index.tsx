@@ -53,40 +53,32 @@ function ShopHome() {
 
   return (
     <div className="space-y-7 pb-4">
-      {/* Hero */}
-      <section className="animate-fade-up relative overflow-hidden rounded-[28px] p-5 text-white shadow-shop-lg">
-        {/* layered gradient + mesh */}
+      {/* Hero — dark forest gradient with mint glow */}
+      <section className="animate-fade-up relative overflow-hidden rounded-[32px] border border-shop-border-strong p-6 text-shop-fg shadow-shop-lg">
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage:
-              "radial-gradient(120% 80% at 0% 0%, oklch(0.78 0.2 45) 0%, transparent 55%), radial-gradient(120% 80% at 100% 100%, oklch(0.5 0.22 18) 0%, transparent 60%), linear-gradient(135deg, var(--shop-primary) 0%, var(--shop-primary-2) 100%)",
+            background:
+              "linear-gradient(135deg, var(--shop-primary-2) 0%, var(--shop-bg) 100%)",
           }}
         />
-        {/* sheen */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/15 via-transparent to-black/10" />
-        {/* dots */}
+        {/* mint glow blob */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-25"
-          style={{
-            backgroundImage: "radial-gradient(white 1px, transparent 1px)",
-            backgroundSize: "16px 16px",
-          }}
+          className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full"
+          style={{ background: "var(--shop-accent)", filter: "blur(80px)", opacity: 0.35 }}
         />
         <div className="relative">
-          <span className="shop-chip bg-white/20 text-white backdrop-blur-sm">
+          <span className="shop-chip border border-shop-border-strong bg-shop-primary-tint text-shop-primary">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-shop-accent" />
             <MapPin className="h-3 w-3" strokeWidth={2.5} /> Delivering to you
           </span>
-          <h1 className="mt-3 font-display text-[28px] font-bold leading-[1.05] tracking-tight">
+          <h1 className="mt-4 font-display text-[40px] leading-[1.05] tracking-tight text-shop-fg">
             Fresh groceries.<br />
-            <span className="inline-flex items-center gap-1.5">
-              <Zap className="h-6 w-6 fill-shop-warning text-shop-warning" strokeWidth={1.5} />
-              In 15 minutes flat.
-            </span>
+            <span className="italic text-shop-accent">In 15 minutes flat.</span>
           </h1>
           <Link
             to="/shop/search"
-            className="mt-5 flex items-center gap-2.5 rounded-full bg-white px-4 py-3 text-shop-muted shadow-shop"
+            className="mt-6 flex items-center gap-2.5 rounded-2xl border border-shop-border-strong bg-shop-bg/60 px-4 py-3.5 text-shop-muted backdrop-blur"
           >
             <Search className="h-4 w-4 text-shop-primary" strokeWidth={2.5} />
             <span className="text-[13px] font-medium">Search "apples", "milk", "chips"…</span>
@@ -94,12 +86,12 @@ function ShopHome() {
         </div>
       </section>
 
-      {/* Promo strip */}
-      <section className="grid grid-cols-3 gap-2.5">
-        <PromoTile icon={<Truck className="h-4 w-4" strokeWidth={2.5} />} title="Free delivery" sub="Orders ₹199+" />
-        <PromoTile icon={<Tag className="h-4 w-4" strokeWidth={2.5} />} title="Daily deals" sub="Up to 50% off" highlight />
-        <PromoTile icon={<Sparkles className="h-4 w-4" strokeWidth={2.5} />} title="Fresh today" sub="Farm direct" />
+      {/* Promo bento — two large tiles */}
+      <section className="grid grid-cols-2 gap-3">
+        <PromoTile icon={<Truck className="h-5 w-5" strokeWidth={2} />} title="Free delivery" sub="Orders ₹199+" />
+        <PromoTile icon={<Tag className="h-5 w-5" strokeWidth={2} />} title="Daily deals" sub="Up to 50% off" highlight />
       </section>
+
 
       {/* Categories */}
       <section>
