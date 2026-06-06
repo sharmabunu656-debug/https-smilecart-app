@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductCard, type ShopProduct } from "@/components/shop/ProductCard";
 import { useShopUserItems } from "@/lib/shop-user-items";
-import { Search, Sparkles, Truck, Tag, MapPin, Zap } from "lucide-react";
+import { Search, Truck, Tag, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/shop/")({
   component: ShopHome,
