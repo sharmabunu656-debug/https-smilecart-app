@@ -139,7 +139,7 @@ export function ProductCard({
           )}
           <button
             onClick={toggleWishlist}
-            className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 shadow-shop-sm transition active:scale-90"
+            className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full border border-shop-border-strong bg-shop-bg/70 shadow-shop-sm backdrop-blur transition active:scale-90"
             aria-label="Wishlist"
           >
             <Heart
