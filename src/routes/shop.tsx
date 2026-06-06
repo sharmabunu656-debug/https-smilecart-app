@@ -48,10 +48,10 @@ function ShopHeader() {
           </button>
         ) : (
           <Link to="/shop" className="flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-shop-grad-primary text-xl shadow-shop-glow">🥕</span>
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-shop-primary text-xl text-shop-bg shadow-shop-glow">🥕</span>
             <div className="leading-tight">
-              <span className="block font-display text-lg font-bold tracking-tight text-shop-fg">FreshKart</span>
-              <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-shop-muted">Fresh in 15 min</span>
+              <span className="block font-display text-2xl tracking-tight text-shop-primary">FreshKart</span>
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-shop-accent">Fresh in 15 min</span>
             </div>
           </Link>
         )}
