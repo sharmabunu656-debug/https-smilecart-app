@@ -133,7 +133,7 @@ export function ProductCard({
             {product.image_url ?? "🛒"}
           </span>
           {pct > 0 && (
-            <span className="shop-chip absolute left-2.5 top-2.5 bg-shop-grad-accent text-white shadow-shop-sm">
+            <span className="shop-chip absolute left-2.5 top-2.5 bg-shop-accent text-shop-bg shadow-shop-sm">
               −{pct}%
             </span>
           )}
