@@ -191,7 +191,7 @@ export function ProductCard({
             <span className="font-mono-num text-xs font-bold">{cartQty}</span>
             <button
               onClick={() => setQty(cartQty + 1)}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 transition active:scale-90"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-shop-bg/30 transition active:scale-90"
             >
               <Plus className="h-3.5 w-3.5" strokeWidth={3} />
             </button>
