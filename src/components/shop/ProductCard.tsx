@@ -122,10 +122,10 @@ export function ProductCard({
         >
           {/* soft grain dots */}
           <div
-            className="pointer-events-none absolute inset-0 opacity-[0.35]"
+            className="pointer-events-none absolute inset-0 opacity-[0.18]"
             style={{
               backgroundImage:
-                "radial-gradient(oklch(1 0 0 / 0.6) 1px, transparent 1px)",
+                "radial-gradient(oklch(0.92 0.2 160) 1px, transparent 1px)",
               backgroundSize: "10px 10px",
             }}
           />
