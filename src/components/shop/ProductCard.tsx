@@ -148,7 +148,7 @@ export function ProductCard({
             />
           </button>
           {product.stock > 0 && product.stock <= 5 && (
-            <span className="shop-chip absolute bottom-2.5 left-2.5 bg-white/90 text-shop-danger shadow-shop-sm">
+            <span className="shop-chip absolute bottom-2.5 left-2.5 border border-shop-border-strong bg-shop-bg/80 text-shop-danger backdrop-blur shadow-shop-sm">
               Only {product.stock} left
             </span>
           )}
