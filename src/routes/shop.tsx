@@ -107,7 +107,7 @@ function NavItem({
     <Link
       to={to}
       activeOptions={{ exact }}
-      activeProps={{ className: "!text-white [&>span:first-child]:bg-shop-grad-primary [&>span:first-child]:shadow-shop-glow" }}
+      activeProps={{ className: "!text-shop-bg [&>span:first-child]:bg-shop-primary [&>span:first-child]:shadow-shop-glow" }}
       className="group relative flex min-w-0 flex-col items-center gap-0.5 rounded-full px-2.5 py-1 text-shop-muted transition-colors"
     >
       <span className="relative flex h-9 w-9 items-center justify-center rounded-full transition-all">
