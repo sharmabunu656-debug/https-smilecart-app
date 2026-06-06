@@ -175,13 +175,13 @@ export function ProductCard({
           <button
             onClick={addToCart}
             disabled={product.stock <= 0}
-            className="flex w-full items-center justify-center gap-1.5 rounded-full bg-shop-primary-soft py-2 text-[11px] font-extrabold uppercase tracking-[0.1em] text-shop-primary transition hover:bg-shop-primary-tint active:scale-95 disabled:opacity-40"
+            className="flex w-full items-center justify-center gap-1.5 rounded-full bg-shop-primary py-2 text-[11px] font-extrabold uppercase tracking-[0.1em] text-shop-bg transition hover:brightness-110 active:scale-95 disabled:opacity-40"
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={3} />
             {product.stock <= 0 ? "Out of stock" : "Add"}
           </button>
         ) : (
-          <div className="flex items-center justify-between rounded-full bg-shop-grad-primary px-1 py-1 text-white shadow-shop-glow">
+          <div className="flex items-center justify-between rounded-full bg-shop-primary px-1 py-1 text-shop-bg shadow-shop-glow">
             <button
               onClick={() => setQty(cartQty - 1)}
               className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 transition active:scale-90"
