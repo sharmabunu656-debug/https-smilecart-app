@@ -167,14 +167,14 @@ function SectionHeader({
     <div className="flex items-end justify-between">
       <div>
         {eyebrow && (
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-shop-primary">{eyebrow}</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-shop-accent">{eyebrow}</p>
         )}
-        <h2 className="font-display text-[22px] font-bold tracking-tight text-shop-fg">{title}</h2>
+        <h2 className="font-display text-[28px] leading-none tracking-tight text-shop-fg">{title}</h2>
       </div>
       {linkTo && (
         <Link
           to={linkTo}
-          className="rounded-full bg-shop-card px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-shop-primary shadow-shop-sm"
+          className="rounded-full border border-shop-border-strong bg-shop-primary-tint px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-shop-primary"
         >
           {linkLabel} →
         </Link>
@@ -196,22 +196,23 @@ function PromoTile({
 }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl p-3 ${highlight ? "shadow-shop" : "shadow-shop-sm"}`}
-      style={{
-        background: highlight
-          ? "linear-gradient(135deg, var(--shop-accent-soft) 0%, oklch(0.97 0.05 130) 100%)"
-          : "var(--shop-card)",
-      }}
+      className={`relative overflow-hidden rounded-3xl p-5 ${
+        highlight
+          ? "border border-shop-border-strong bg-shop-card-2 shadow-shop-glow"
+          : "shop-surface"
+      }`}
     >
       <div
-        className={`mb-1.5 flex h-7 w-7 items-center justify-center rounded-full text-white ${
-          highlight ? "bg-shop-grad-accent" : "bg-shop-grad-primary"
+        className={`mb-3 flex h-10 w-10 items-center justify-center rounded-2xl ${
+          highlight
+            ? "bg-shop-accent-soft text-shop-accent"
+            : "bg-shop-primary-tint text-shop-primary"
         }`}
       >
         {icon}
       </div>
-      <p className="text-[11.5px] font-bold leading-tight text-shop-fg">{title}</p>
-      <p className="text-[10px] text-shop-muted">{sub}</p>
+      <p className="text-sm font-semibold leading-tight text-shop-fg">{title}</p>
+      <p className="mt-0.5 text-[11px] text-shop-muted">{sub}</p>
     </div>
   );
 }
