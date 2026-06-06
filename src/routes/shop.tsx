@@ -113,7 +113,7 @@ function NavItem({
       <span className="relative flex h-9 w-9 items-center justify-center rounded-full transition-all">
         {icon}
         {badge && badge > 0 ? (
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-shop-grad-primary px-1 text-[10px] font-bold text-white ring-2 ring-white">
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-shop-accent px-1 text-[10px] font-bold text-shop-bg ring-2 ring-shop-bg">
             {badge}
           </span>
         ) : null}
