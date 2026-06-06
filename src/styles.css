@@ -431,9 +431,9 @@
 .shop-theme .skeleton {
   background: linear-gradient(
     90deg,
-    var(--shop-card) 0%,
-    var(--shop-bg-2) 50%,
-    var(--shop-card) 100%
+    oklch(0.28 0.05 200 / 0.4) 0%,
+    oklch(0.82 0.17 170 / 0.18) 50%,
+    oklch(0.28 0.05 200 / 0.4) 100%
   );
   background-size: 200% 100%;
   animation: shop-shimmer 1.6s ease-in-out infinite;
