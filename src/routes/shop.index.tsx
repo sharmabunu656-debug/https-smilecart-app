@@ -93,32 +93,25 @@ function ShopHome() {
       </section>
 
 
-      {/* Categories */}
+      {/* Categories — horizontal bento scroll */}
       <section>
         <SectionHeader title="Shop by category" eyebrow="Browse" />
-        <div className="mt-4 grid grid-cols-4 gap-2.5">
+        <div className="mt-4 -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {categories.map((c, i) => (
             <Link
               key={c.id}
               to="/shop/category/$slug"
               params={{ slug: c.slug }}
-              className="group flex flex-col items-center gap-1.5 rounded-2xl shop-surface px-2 py-3 transition active:scale-95"
+              className="group flex h-28 w-28 flex-none flex-col justify-between rounded-3xl border border-shop-border-strong bg-shop-card-2 p-3 transition active:scale-95"
               style={{ animation: `shop-fade-up 380ms ${i * 40}ms cubic-bezier(0.2, 0.7, 0.2, 1) both` }}
             >
-              <span
-                className="flex h-12 w-12 items-center justify-center rounded-2xl text-2xl transition-transform group-active:scale-90"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(120% 80% at 50% 0%, var(--shop-primary-tint) 0%, var(--shop-primary-soft) 100%)",
-                }}
-              >
-                {c.emoji ?? "🛍️"}
-              </span>
-              <span className="text-[10.5px] font-semibold leading-tight text-shop-fg-soft text-center">{c.name}</span>
+              <span className="text-2xl">{c.emoji ?? "🛍️"}</span>
+              <span className="text-[11px] font-semibold leading-tight text-shop-fg">{c.name}</span>
             </Link>
           ))}
         </div>
       </section>
+
 
       {/* Featured */}
       <section>
