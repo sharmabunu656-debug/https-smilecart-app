@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SalesRouteImport } from './routes/sales'
 import { Route as ReportsRouteImport } from './routes/reports'
@@ -30,6 +31,11 @@ import { Route as ShopProductIdRouteImport } from './routes/shop.product.$id'
 import { Route as ShopOrdersIdRouteImport } from './routes/shop.orders.$id'
 import { Route as ShopCategorySlugRouteImport } from './routes/shop.category.$slug'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof ReportsRoute
   '/sales': typeof SalesRoute
   '/shop': typeof ShopRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/shop/account': typeof ShopAccountRoute
   '/shop/addresses': typeof ShopAddressesRoute
   '/shop/admin': typeof ShopAdminRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
   '/sales': typeof SalesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/shop/account': typeof ShopAccountRoute
   '/shop/addresses': typeof ShopAddressesRoute
   '/shop/admin': typeof ShopAdminRoute
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/reports': typeof ReportsRoute
   '/sales': typeof SalesRoute
   '/shop': typeof ShopRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/shop/account': typeof ShopAccountRoute
   '/shop/addresses': typeof ShopAddressesRoute
   '/shop/admin': typeof ShopAdminRoute
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/sales'
     | '/shop'
+    | '/sitemap.xml'
     | '/shop/account'
     | '/shop/addresses'
     | '/shop/admin'
@@ -228,6 +238,7 @@ export interface FileRouteTypes {
     | '/purchases'
     | '/reports'
     | '/sales'
+    | '/sitemap.xml'
     | '/shop/account'
     | '/shop/addresses'
     | '/shop/admin'
@@ -250,6 +261,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/sales'
     | '/shop'
+    | '/sitemap.xml'
     | '/shop/account'
     | '/shop/addresses'
     | '/shop/admin'
@@ -273,10 +285,18 @@ export interface RootRouteChildren {
   ReportsRoute: typeof ReportsRoute
   SalesRoute: typeof SalesRoute
   ShopRoute: typeof ShopRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
@@ -462,6 +482,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReportsRoute: ReportsRoute,
   SalesRoute: SalesRoute,
   ShopRoute: ShopRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
