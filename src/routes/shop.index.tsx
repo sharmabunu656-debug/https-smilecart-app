@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductCard, type ShopProduct } from "@/components/shop/ProductCard";
 import { useShopUserItems } from "@/lib/shop-user-items";
-import { Search, Truck, Tag, MapPin } from "lucide-react";
+import { Search, Sparkles, Truck, Tag, MapPin, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/shop/")({
   component: ShopHome,
@@ -53,32 +53,40 @@ function ShopHome() {
 
   return (
     <div className="space-y-7 pb-4">
-      {/* Hero — dark forest gradient with mint glow */}
-      <section className="animate-fade-up relative overflow-hidden rounded-[32px] border border-shop-border-strong p-6 text-shop-fg shadow-shop-lg">
+      {/* Hero */}
+      <section className="animate-fade-up relative overflow-hidden rounded-[28px] p-5 text-white shadow-shop-lg">
+        {/* layered gradient + mesh */}
         <div
           className="absolute inset-0"
           style={{
-            background:
-              "linear-gradient(135deg, var(--shop-primary-2) 0%, var(--shop-bg) 100%)",
+            backgroundImage:
+              "radial-gradient(120% 80% at 0% 0%, oklch(0.78 0.2 45) 0%, transparent 55%), radial-gradient(120% 80% at 100% 100%, oklch(0.5 0.22 18) 0%, transparent 60%), linear-gradient(135deg, var(--shop-primary) 0%, var(--shop-primary-2) 100%)",
           }}
         />
-        {/* mint glow blob */}
+        {/* sheen */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/15 via-transparent to-black/10" />
+        {/* dots */}
         <div
-          className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full"
-          style={{ background: "var(--shop-accent)", filter: "blur(80px)", opacity: 0.35 }}
+          className="pointer-events-none absolute inset-0 opacity-25"
+          style={{
+            backgroundImage: "radial-gradient(white 1px, transparent 1px)",
+            backgroundSize: "16px 16px",
+          }}
         />
         <div className="relative">
-          <span className="shop-chip border border-shop-border-strong bg-shop-primary-tint text-shop-primary">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-shop-accent" />
+          <span className="shop-chip bg-white/20 text-white backdrop-blur-sm">
             <MapPin className="h-3 w-3" strokeWidth={2.5} /> Delivering to you
           </span>
-          <h1 className="mt-4 font-display text-[40px] leading-[1.05] tracking-tight text-shop-fg">
+          <h1 className="mt-3 font-display text-[28px] font-bold leading-[1.05] tracking-tight">
             Fresh groceries.<br />
-            <span className="italic text-shop-accent">In 15 minutes flat.</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Zap className="h-6 w-6 fill-shop-warning text-shop-warning" strokeWidth={1.5} />
+              In 15 minutes flat.
+            </span>
           </h1>
           <Link
             to="/shop/search"
-            className="mt-6 flex items-center gap-2.5 rounded-2xl border border-shop-border-strong bg-shop-bg/60 px-4 py-3.5 text-shop-muted backdrop-blur"
+            className="mt-5 flex items-center gap-2.5 rounded-full bg-white px-4 py-3 text-shop-muted shadow-shop"
           >
             <Search className="h-4 w-4 text-shop-primary" strokeWidth={2.5} />
             <span className="text-[13px] font-medium">Search "apples", "milk", "chips"…</span>
@@ -86,32 +94,39 @@ function ShopHome() {
         </div>
       </section>
 
-      {/* Promo bento — two large tiles */}
-      <section className="grid grid-cols-2 gap-3">
-        <PromoTile icon={<Truck className="h-5 w-5" strokeWidth={2} />} title="Free delivery" sub="Orders ₹199+" />
-        <PromoTile icon={<Tag className="h-5 w-5" strokeWidth={2} />} title="Daily deals" sub="Up to 50% off" highlight />
+      {/* Promo strip */}
+      <section className="grid grid-cols-3 gap-2.5">
+        <PromoTile icon={<Truck className="h-4 w-4" strokeWidth={2.5} />} title="Free delivery" sub="Orders ₹199+" />
+        <PromoTile icon={<Tag className="h-4 w-4" strokeWidth={2.5} />} title="Daily deals" sub="Up to 50% off" highlight />
+        <PromoTile icon={<Sparkles className="h-4 w-4" strokeWidth={2.5} />} title="Fresh today" sub="Farm direct" />
       </section>
 
-
-      {/* Categories — horizontal bento scroll */}
+      {/* Categories */}
       <section>
         <SectionHeader title="Shop by category" eyebrow="Browse" />
-        <div className="mt-4 -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mt-4 grid grid-cols-4 gap-2.5">
           {categories.map((c, i) => (
             <Link
               key={c.id}
               to="/shop/category/$slug"
               params={{ slug: c.slug }}
-              className="group flex h-28 w-28 flex-none flex-col justify-between rounded-3xl border border-shop-border-strong bg-shop-card-2 p-3 transition active:scale-95"
+              className="group flex flex-col items-center gap-1.5 rounded-2xl shop-surface px-2 py-3 transition active:scale-95"
               style={{ animation: `shop-fade-up 380ms ${i * 40}ms cubic-bezier(0.2, 0.7, 0.2, 1) both` }}
             >
-              <span className="text-2xl">{c.emoji ?? "🛍️"}</span>
-              <span className="text-[11px] font-semibold leading-tight text-shop-fg">{c.name}</span>
+              <span
+                className="flex h-12 w-12 items-center justify-center rounded-2xl text-2xl transition-transform group-active:scale-90"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(120% 80% at 50% 0%, var(--shop-primary-tint) 0%, var(--shop-primary-soft) 100%)",
+                }}
+              >
+                {c.emoji ?? "🛍️"}
+              </span>
+              <span className="text-[10.5px] font-semibold leading-tight text-shop-fg-soft text-center">{c.name}</span>
             </Link>
           ))}
         </div>
       </section>
-
 
       {/* Featured */}
       <section>
@@ -160,14 +175,14 @@ function SectionHeader({
     <div className="flex items-end justify-between">
       <div>
         {eyebrow && (
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-shop-accent">{eyebrow}</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-shop-primary">{eyebrow}</p>
         )}
-        <h2 className="font-display text-[28px] leading-none tracking-tight text-shop-fg">{title}</h2>
+        <h2 className="font-display text-[22px] font-bold tracking-tight text-shop-fg">{title}</h2>
       </div>
       {linkTo && (
         <Link
           to={linkTo}
-          className="rounded-full border border-shop-border-strong bg-shop-primary-tint px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-shop-primary"
+          className="rounded-full bg-shop-card px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-shop-primary shadow-shop-sm"
         >
           {linkLabel} →
         </Link>
@@ -189,23 +204,22 @@ function PromoTile({
 }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl p-5 ${
-        highlight
-          ? "border border-shop-border-strong bg-shop-card-2 shadow-shop-glow"
-          : "shop-surface"
-      }`}
+      className={`relative overflow-hidden rounded-2xl p-3 ${highlight ? "shadow-shop" : "shadow-shop-sm"}`}
+      style={{
+        background: highlight
+          ? "linear-gradient(135deg, var(--shop-accent-soft) 0%, oklch(0.97 0.05 130) 100%)"
+          : "var(--shop-card)",
+      }}
     >
       <div
-        className={`mb-3 flex h-10 w-10 items-center justify-center rounded-2xl ${
-          highlight
-            ? "bg-shop-accent-soft text-shop-accent"
-            : "bg-shop-primary-tint text-shop-primary"
+        className={`mb-1.5 flex h-7 w-7 items-center justify-center rounded-full text-white ${
+          highlight ? "bg-shop-grad-accent" : "bg-shop-grad-primary"
         }`}
       >
         {icon}
       </div>
-      <p className="text-sm font-semibold leading-tight text-shop-fg">{title}</p>
-      <p className="mt-0.5 text-[11px] text-shop-muted">{sub}</p>
+      <p className="text-[11.5px] font-bold leading-tight text-shop-fg">{title}</p>
+      <p className="text-[10px] text-shop-muted">{sub}</p>
     </div>
   );
 }

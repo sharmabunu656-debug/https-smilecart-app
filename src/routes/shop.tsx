@@ -48,10 +48,10 @@ function ShopHeader() {
           </button>
         ) : (
           <Link to="/shop" className="flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-shop-primary text-xl text-shop-bg shadow-shop-glow">🥕</span>
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-shop-grad-primary text-xl shadow-shop-glow">🥕</span>
             <div className="leading-tight">
-              <span className="block font-display text-2xl tracking-tight text-shop-primary">FreshKart</span>
-              <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-shop-accent">Fresh in 15 min</span>
+              <span className="block font-display text-lg font-bold tracking-tight text-shop-fg">FreshKart</span>
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-shop-muted">Fresh in 15 min</span>
             </div>
           </Link>
         )}
@@ -107,13 +107,13 @@ function NavItem({
     <Link
       to={to}
       activeOptions={{ exact }}
-      activeProps={{ className: "!text-shop-bg [&>span:first-child]:bg-shop-primary [&>span:first-child]:shadow-shop-glow" }}
+      activeProps={{ className: "!text-white [&>span:first-child]:bg-shop-grad-primary [&>span:first-child]:shadow-shop-glow" }}
       className="group relative flex min-w-0 flex-col items-center gap-0.5 rounded-full px-2.5 py-1 text-shop-muted transition-colors"
     >
       <span className="relative flex h-9 w-9 items-center justify-center rounded-full transition-all">
         {icon}
         {badge && badge > 0 ? (
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-shop-accent px-1 text-[10px] font-bold text-shop-bg ring-2 ring-shop-bg">
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-shop-grad-primary px-1 text-[10px] font-bold text-white ring-2 ring-white">
             {badge}
           </span>
         ) : null}
