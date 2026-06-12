@@ -1,0 +1,42 @@
+name: Verify SEO Files
+
+# Runs on a schedule (every 15 min) and manually after publishing.
+# GitHub auto-emails repo admins when a workflow fails — that's the alert.
+# Also runs on push to main to catch regressions in public/ files.
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Base URL to verify (defaults to production)"
+        required: false
+        default: "https://https-smilecart-app.lovable.app"
+  schedule:
+    - cron: "*/15 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - "public/google*.html"
+      - "public/BingSiteAuth.xml"
+      - "public/robots.txt"
+      - "public/sitemap.xml"
+      - "scripts/verify-seo-files.mjs"
+      - ".github/workflows/verify-seo.yml"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Verify SEO files (poll up to 30 min)
+        env:
+          SEO_VERIFY_BASE_URL: ${{ github.event.inputs.base_url || 'https://https-smilecart-app.lovable.app' }}
+          SEO_VERIFY_TIMEOUT_MS: "1800000"
+          SEO_VERIFY_INTERVAL_MS: "30000"
+          SEO_ALERT_WEBHOOK_URL: ${{ secrets.SEO_ALERT_WEBHOOK_URL }}
+        run: bun run verify:seo:wait
