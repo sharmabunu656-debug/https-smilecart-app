@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "verify:seo": "node scripts/verify-seo-files.mjs"
+    "verify:seo": "node scripts/verify-seo-files.mjs",
+    "verify:seo:wait": "node scripts/verify-seo-files.mjs --wait"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
