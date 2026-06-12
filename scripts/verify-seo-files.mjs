@@ -21,15 +21,18 @@ for (const file of readdirSync(PUBLIC_DIR)) {
       url: `${BASE}/${file}`,
       contains: `google-site-verification: ${file}`,
       expectedBody: body,
+      contentType: /text\/html/i,
     });
   }
 }
 
 // Bing
+const bingBody = readFileSync(join(PUBLIC_DIR, "BingSiteAuth.xml"), "utf8").trim();
 checks.push({
   label: "Bing verification: BingSiteAuth.xml",
   url: `${BASE}/BingSiteAuth.xml`,
   contains: "<user>",
+  expectedBody: bingBody,
   contentType: /xml/i,
 });
 
